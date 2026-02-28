@@ -9,7 +9,7 @@
       "type": "n8n-nodes-base.awsS3",
       "typeVersion": 2,
       "position": [
-        48,
+        -224,
         -16
       ],
       "id": "a67927f1-62af-4683-8e61-3d64893838fb",
@@ -32,7 +32,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -160,
+        -432,
         -16
       ],
       "id": "c73257e1-160b-4927-b29b-56f5d9cfde68",
@@ -48,11 +48,119 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        256,
+        -16,
         -16
       ],
       "id": "e68440b3-109d-45bf-8f68-a08c20fc062b",
       "name": "AI Transcription & Auto-Normalization (Whisper)",
+      "credentials": {
+        "openAiApi": {
+          "id": "DpYR35CeOdtNmo9F",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "You are a support triage expert. Classify the following transcript into exactly ONE category: [Billing, Technical, Sales, Cancellation, General]. Output ONLY the category name."
+            },
+            {
+              "content": "={{ $json.text }}."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        256,
+        -192
+      ],
+      "id": "4f9b1fa9-315d-48b8-b8b1-1791780e6813",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "DpYR35CeOdtNmo9F",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "Scan for 'Red Flag' keywords (Lawyer, BBB, Unfair, Sue). Return JSON: {\"risk\": boolean, \"terms\": []}."
+            },
+            {
+              "content": "={{ $json.text }}."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        272,
+        0
+      ],
+      "id": "f45fcafc-e4ae-488d-a8bb-f6a16ce357e0",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "DpYR35CeOdtNmo9F",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "Analyze emotional intensity. Assign a score 1-10. Return ONLY the number."
+            },
+            {
+              "content": "={{ $json.text }}."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        272,
+        192
+      ],
+      "id": "b5ef6505-4b14-4dc1-9e07-3aab621ed2ab",
+      "name": "Message a model2",
       "credentials": {
         "openAiApi": {
           "id": "DpYR35CeOdtNmo9F",
@@ -124,6 +232,27 @@
           }
         ]
       ]
+    },
+    "AI Transcription & Auto-Normalization (Whisper)": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Message a model2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -132,7 +261,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "3b06335e-6aff-4694-ba4e-2c4a8a0e6bb5",
+  "versionId": "639b7d56-6898-438b-bbc8-a473654b5664",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b637fd1006e44f723be16875a61ac23ca341ba9d1d20a1b8ec53c38777cc0848"
