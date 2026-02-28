@@ -38,6 +38,27 @@
       "id": "c73257e1-160b-4927-b29b-56f5d9cfde68",
       "name": "On S3 File Upload",
       "webhookId": "75db9b65-ab39-41db-a2d5-86af757b2dce"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        256,
+        -16
+      ],
+      "id": "e68440b3-109d-45bf-8f68-a08c20fc062b",
+      "name": "AI Transcription & Auto-Normalization (Whisper)",
+      "credentials": {
+        "openAiApi": {
+          "id": "DpYR35CeOdtNmo9F",
+          "name": "OpenAi account"
+        }
+      }
     }
   ],
   "pinData": {
@@ -92,6 +113,17 @@
           }
         ]
       ]
+    },
+    "Download Audio Binary": {
+      "main": [
+        [
+          {
+            "node": "AI Transcription & Auto-Normalization (Whisper)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -100,7 +132,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "42318c40-5b62-4194-8066-06163e5486f4",
+  "versionId": "3b06335e-6aff-4694-ba4e-2c4a8a0e6bb5",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b637fd1006e44f723be16875a61ac23ca341ba9d1d20a1b8ec53c38777cc0848"
