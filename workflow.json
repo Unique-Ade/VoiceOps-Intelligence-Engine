@@ -3,6 +3,26 @@
   "nodes": [
     {
       "parameters": {
+        "bucketName": "voiceops-intelligence-adeola",
+        "fileKey": "={{ JSON.parse(JSON.parse($json.body).Message).Records[0].s3.object.key }}"
+      },
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 2,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "a67927f1-62af-4683-8e61-3d64893838fb",
+      "name": "Download Audio Binary",
+      "credentials": {
+        "aws": {
+          "id": "HasDjXAVugGZ0gJ7",
+          "name": "AWS (IAM) account"
+        }
+      }
+    },
+    {
+      "parameters": {
         "httpMethod": "POST",
         "path": "aws-injection",
         "responseMode": "lastNode",
@@ -16,37 +36,57 @@
         -16
       ],
       "id": "c73257e1-160b-4927-b29b-56f5d9cfde68",
-      "name": "Webhook",
+      "name": "On S3 File Upload",
       "webhookId": "75db9b65-ab39-41db-a2d5-86af757b2dce"
-    },
-    {
-      "parameters": {
-        "bucketName": "voiceops-intelligence-adeola",
-        "fileKey": "={{ JSON.parse($json.body.Message).Records[0].s3.object.key }}"
-      },
-      "type": "n8n-nodes-base.awsS3",
-      "typeVersion": 2,
-      "position": [
-        48,
-        -16
-      ],
-      "id": "a67927f1-62af-4683-8e61-3d64893838fb",
-      "name": "Download a file",
-      "credentials": {
-        "aws": {
-          "id": "HasDjXAVugGZ0gJ7",
-          "name": "AWS (IAM) account"
-        }
-      }
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "On S3 File Upload": [
+      {
+        "json": {
+          "headers": {
+            "host": "adeolatech.app.n8n.cloud",
+            "user-agent": "Amazon Simple Notification Service Agent",
+            "content-length": "1856",
+            "accept-encoding": "gzip, br",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "52.46.211.41",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "SE",
+            "cf-ray": "9d4f6d2978cc2d83-ARN",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "text/plain; charset=UTF-8",
+            "x-amz-sns-message-id": "a3bbbd72-3ff7-59a1-902f-df6ef297c3ed",
+            "x-amz-sns-message-type": "Notification",
+            "x-amz-sns-subscription-arn": "arn:aws:sns:eu-north-1:226977156026:S3-to-n8n-Webhook:00504ec1-36cd-44b8-b3ac-122d8a9d409a",
+            "x-amz-sns-topic-arn": "arn:aws:sns:eu-north-1:226977156026:S3-to-n8n-Webhook",
+            "x-forwarded-for": "52.46.211.41, 162.158.182.116",
+            "x-forwarded-host": "adeolatech.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-57-677fd4b9c9-rkpj6",
+            "x-is-trusted": "yes",
+            "x-real-ip": "52.46.211.41"
+          },
+          "params": {},
+          "query": {},
+          "body": "{\n  \"Type\" : \"Notification\",\n  \"MessageId\" : \"a3bbbd72-3ff7-59a1-902f-df6ef297c3ed\",\n  \"TopicArn\" : \"arn:aws:sns:eu-north-1:226977156026:S3-to-n8n-Webhook\",\n  \"Subject\" : \"Amazon S3 Notification\",\n  \"Message\" : \"{\\\"Records\\\":[{\\\"eventVersion\\\":\\\"2.1\\\",\\\"eventSource\\\":\\\"aws:s3\\\",\\\"awsRegion\\\":\\\"eu-north-1\\\",\\\"eventTime\\\":\\\"2026-02-28T11:01:51.446Z\\\",\\\"eventName\\\":\\\"ObjectCreated:Put\\\",\\\"userIdentity\\\":{\\\"principalId\\\":\\\"A26PB7Z44G30GZ\\\"},\\\"requestParameters\\\":{\\\"sourceIPAddress\\\":\\\"102.89.23.10\\\"},\\\"responseElements\\\":{\\\"x-amz-request-id\\\":\\\"0Y2DWRJF9GWE7MTR\\\",\\\"x-amz-id-2\\\":\\\"0Pn9RsoPHrjvaWtHW84y+kBCIzX8tatPjO0QB0E7glf/T3LAjxWUAehTW0mCFqobSNnaoOXRW8Ni1CApWzqCA0dTnZsLz4+oTyWZdT6y+yg=\\\"},\\\"s3\\\":{\\\"s3SchemaVersion\\\":\\\"1.0\\\",\\\"configurationId\\\":\\\"VoiceOps-New-Audio-Ingestion\\\",\\\"bucket\\\":{\\\"name\\\":\\\"voiceops-intelligence-adeola\\\",\\\"ownerIdentity\\\":{\\\"principalId\\\":\\\"A26PB7Z44G30GZ\\\"},\\\"arn\\\":\\\"arn:aws:s3:::voiceops-intelligence-adeola\\\"},\\\"object\\\":{\\\"key\\\":\\\"audio_support_request.mp3.m4a\\\",\\\"size\\\":996392,\\\"eTag\\\":\\\"0b00c6d646d1f47861cd09f830fe76c1\\\",\\\"sequencer\\\":\\\"0069A2CB1F679B188E\\\"}}}]}\",\n  \"Timestamp\" : \"2026-02-28T11:01:52.123Z\",\n  \"SignatureVersion\" : \"1\",\n  \"Signature\" : \"G9VfVDGIAfBCPobA1u4KQhyEtbrkpnGJeqUP25q8kNo5KHbkcYVmagQYuxRZmL5W9tCIYYm1ZS0SKCJWyxRyYB3DMxuMoSqItHk4Qwa32nVXj/cV/hGKvYX5z9E6XxsGGjP05gXPLPbkh+DxxhvxPU2egCEqIDvC4kEslYO0dU/js4Noq+6h/TpjQcXVOeqweYoA6sZY7471+eG133gG6P+LrgbJwFoAMnu1xZr9L5yKJo56LXjJtV3EaYWU+RYePScSOX8zJ3NtNvKEEFaRtoSgk4xGMKLPG9ZV461o8eccW/I3qYCMNA2vtPisPR5+GyFt943a6Q7pS+5AnUqFHA==\",\n  \"SigningCertURL\" : \"https://sns.eu-north-1.amazonaws.com/SimpleNotificationService-7506a1e35b36ef5a444dd1a8e7cc3ed8.pem\",\n  \"UnsubscribeURL\" : \"https://sns.eu-north-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-north-1:226977156026:S3-to-n8n-Webhook:00504ec1-36cd-44b8-b3ac-122d8a9d409a\"\n}",
+          "webhookUrl": "https://adeolatech.app.n8n.cloud/webhook-test/aws-injection",
+          "executionMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
   "connections": {
-    "Webhook": {
+    "On S3 File Upload": {
       "main": [
         [
           {
-            "node": "Download a file",
+            "node": "Download Audio Binary",
             "type": "main",
             "index": 0
           }
@@ -60,7 +100,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "873cedef-48c4-4a2b-b71a-ae759e9f7b81",
+  "versionId": "42318c40-5b62-4194-8066-06163e5486f4",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b637fd1006e44f723be16875a61ac23ca341ba9d1d20a1b8ec53c38777cc0848"
