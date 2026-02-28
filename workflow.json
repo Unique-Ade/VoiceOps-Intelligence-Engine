@@ -1,0 +1,70 @@
+{
+  "name": "VoiceOps: Intelligence & Risk Routing Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aws-injection",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -160,
+        -16
+      ],
+      "id": "c73257e1-160b-4927-b29b-56f5d9cfde68",
+      "name": "Webhook",
+      "webhookId": "75db9b65-ab39-41db-a2d5-86af757b2dce"
+    },
+    {
+      "parameters": {
+        "bucketName": "voiceops-intelligence-adeola",
+        "fileKey": "={{ JSON.parse($json.body.Message).Records[0].s3.object.key }}"
+      },
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 2,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "a67927f1-62af-4683-8e61-3d64893838fb",
+      "name": "Download a file",
+      "credentials": {
+        "aws": {
+          "id": "HasDjXAVugGZ0gJ7",
+          "name": "AWS (IAM) account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Download a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "873cedef-48c4-4a2b-b71a-ae759e9f7b81",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b637fd1006e44f723be16875a61ac23ca341ba9d1d20a1b8ec53c38777cc0848"
+  },
+  "id": "O2PrfnQECUNO5Mhn",
+  "tags": []
+}
