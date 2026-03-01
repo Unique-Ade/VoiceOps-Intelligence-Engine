@@ -9,8 +9,8 @@
       "type": "n8n-nodes-base.awsS3",
       "typeVersion": 2,
       "position": [
-        -224,
-        -16
+        -1232,
+        -80
       ],
       "id": "a67927f1-62af-4683-8e61-3d64893838fb",
       "name": "Download Audio Binary",
@@ -32,8 +32,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -432,
-        -16
+        -1440,
+        -80
       ],
       "id": "c73257e1-160b-4927-b29b-56f5d9cfde68",
       "name": "On S3 File Upload",
@@ -48,8 +48,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        -16,
-        -16
+        -1024,
+        -80
       ],
       "id": "e68440b3-109d-45bf-8f68-a08c20fc062b",
       "name": "AI Transcription & Auto-Normalization (Whisper)",
@@ -78,17 +78,18 @@
             }
           ]
         },
+        "simplify": false,
         "builtInTools": {},
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        256,
-        -192
+        -752,
+        -256
       ],
       "id": "4f9b1fa9-315d-48b8-b8b1-1791780e6813",
-      "name": "Message a model",
+      "name": "GPT: Triage Classifier",
       "credentials": {
         "openAiApi": {
           "id": "DpYR35CeOdtNmo9F",
@@ -120,11 +121,11 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        272,
-        0
+        -736,
+        -80
       ],
       "id": "f45fcafc-e4ae-488d-a8bb-f6a16ce357e0",
-      "name": "Message a model1",
+      "name": "GPT: Risk & Compliance Monitor",
       "credentials": {
         "openAiApi": {
           "id": "DpYR35CeOdtNmo9F",
@@ -156,15 +157,258 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        272,
-        192
+        -736,
+        96
       ],
       "id": "b5ef6505-4b14-4dc1-9e07-3aab621ed2ab",
-      "name": "Message a model2",
+      "name": "GPT: Emotional Intensity Scorer",
       "credentials": {
         "openAiApi": {
           "id": "DpYR35CeOdtNmo9F",
           "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        0,
+        -112
+      ],
+      "id": "ef40aeac-2732-42d9-adc7-76ba793af5db",
+      "name": "Merge: Consolidate AI Insights"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3ab69b44-4fb2-4a01-bd59-6f51abdb17b9",
+              "name": "category",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        -256
+      ],
+      "id": "87d1b02e-3065-44a9-8264-df92ac057bc3",
+      "name": "category"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "668b3838-d287-424b-a81d-723cf2641042",
+              "name": "risk_found",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -384,
+        -80
+      ],
+      "id": "6733d398-c1af-4116-92b4-98c1f55e8735",
+      "name": "risk_found"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0a2db35-5338-45de-9a7a-6abe881f45b0",
+              "name": "priority_score",
+              "value": "={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -384,
+        96
+      ],
+      "id": "9b85b95a-4232-4a7e-8d31-c07dfbda6d0b",
+      "name": "priority_score"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "45722e90-ccb1-4745-bfb8-f88a0d603398",
+              "leftValue": "={{ $json.priority_score }}",
+              "rightValue": 8,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        224
+      ],
+      "id": "2edf1dfe-1df4-4b9e-87c6-c08c673e6eb7",
+      "name": "Urgency Router"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A8874MUNS",
+          "mode": "list",
+          "cachedResultName": "n8n-bot"
+        },
+        "text": "This is a High Piority Message",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        368,
+        208
+      ],
+      "id": "52f71591-303d-4541-a13b-1828d0987004",
+      "name": "Send a message",
+      "webhookId": "3d27024b-71e5-4e5a-b142-071cb007314a",
+      "credentials": {
+        "slackApi": {
+          "id": "dXKTWaHu0jHAgg5K",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1BUusBCjwrvbykqW_fatEkHLdJv1Pt-KgEzmVp3qVWnw",
+          "mode": "list",
+          "cachedResultName": "VoiceOps_Support_Dashboard.",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BUusBCjwrvbykqW_fatEkHLdJv1Pt-KgEzmVp3qVWnw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BUusBCjwrvbykqW_fatEkHLdJv1Pt-KgEzmVp3qVWnw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Category": "={{ $json.category }}",
+            "Urgency Score": "={{ $json.priority_score }}",
+            "Legal Risk": "={{ $json.risk_found.risk ? \"🔴 YES\" : \"🟢 Clear\" }}",
+            "Timestamp": "={{ $now }}",
+            "Transcript": "={{ $('GPT: Triage Classifier').item.json.output[0].content[0].text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Transcript",
+              "displayName": "Transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgency Score",
+              "displayName": "Urgency Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Legal Risk",
+              "displayName": "Legal Risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        -96
+      ],
+      "id": "ce68b10c-ed75-4612-ae1b-f99aa422eb54",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oPauz0pFkk1FFysZ",
+          "name": "Google Sheets account"
         }
       }
     }
@@ -237,17 +481,99 @@
       "main": [
         [
           {
-            "node": "Message a model",
+            "node": "GPT: Triage Classifier",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Message a model1",
+            "node": "GPT: Risk & Compliance Monitor",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Message a model2",
+            "node": "GPT: Emotional Intensity Scorer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT: Triage Classifier": {
+      "main": [
+        [
+          {
+            "node": "category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT: Risk & Compliance Monitor": {
+      "main": [
+        [
+          {
+            "node": "risk_found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT: Emotional Intensity Scorer": {
+      "main": [
+        [
+          {
+            "node": "priority_score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "category": {
+      "main": [
+        [
+          {
+            "node": "Merge: Consolidate AI Insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "risk_found": {
+      "main": [
+        [
+          {
+            "node": "Merge: Consolidate AI Insights",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "priority_score": {
+      "main": [
+        [
+          {
+            "node": "Merge: Consolidate AI Insights",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge: Consolidate AI Insights": {
+      "main": [
+        []
+      ]
+    },
+    "Urgency Router": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
             "type": "main",
             "index": 0
           }
@@ -261,7 +587,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "639b7d56-6898-438b-bbc8-a473654b5664",
+  "versionId": "cbcadcb8-16f9-444c-bc5c-7ede39b71d5a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b637fd1006e44f723be16875a61ac23ca341ba9d1d20a1b8ec53c38777cc0848"
