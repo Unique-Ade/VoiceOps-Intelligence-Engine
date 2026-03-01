@@ -566,7 +566,13 @@
     },
     "Merge: Consolidate AI Insights": {
       "main": [
-        []
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Urgency Router": {
@@ -587,7 +593,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "cbcadcb8-16f9-444c-bc5c-7ede39b71d5a",
+  "versionId": "3835dd8a-44ad-42c3-9d2b-280059ba8a9e",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b637fd1006e44f723be16875a61ac23ca341ba9d1d20a1b8ec53c38777cc0848"
