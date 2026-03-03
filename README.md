@@ -3,8 +3,6 @@
 ## 📌 Project Overview
 The **VoiceOps-Intelligence-Engine** is a production-grade asynchronous media processing and business intelligence pipeline. Built using **n8n**, **OpenAI (Whisper & GPT-4o)**, **Google Sheets**, and **Slack**, it transforms raw voice data into structured, actionable insights.
 
-
-
 The system doesn't just transcribe; it acts as a "Digital Supervisor"—analyzing every recording for intent, priority, and legal compliance before routing the data to the appropriate stakeholder.
 
 ---
@@ -67,6 +65,10 @@ A core feature of this project is its **resilience against AI hallucination and 
 - **Markdown Sanitization:** Custom JavaScript logic to strip backticks (`` ```json ``) and text artifacts from AI responses.
 - **Type-Safe Logic:** Uses defensive `==` equality checks to handle both Boolean and Stringified-Boolean responses from LLMs.
 - **Human-Centric Formatting:** Employs ternary operators to convert raw data into visual status indicators (🔴/🟢) for immediate recognition by humans in Slack.
+
+![Google Sheet Overview](google_sheet_report.PNG)
+
+![Slack Overview](slack_alert.PNG)
 
 ---
 
