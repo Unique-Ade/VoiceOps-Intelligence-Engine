@@ -420,6 +420,51 @@
       ],
       "id": "2edf1dfe-1df4-4b9e-87c6-c08c673e6eb7",
       "name": "Filter: High Urgency"
+    },
+    {
+      "parameters": {
+        "content": "INTAKE LAYER",
+        "height": 240,
+        "width": 720
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1552,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "921f37ce-66e9-4a5a-b941-0ccc1d4d81d1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "INTELLIGENCE LAYER",
+        "height": 560,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -800,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "b46c8715-5c0b-470d-a781-a281c389d3e9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "ACTION LAYER",
+        "height": 544,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -96,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "9f9ebaa5-afa6-433e-a33b-c69049e9d91b",
+      "name": "Sticky Note2"
     }
   ],
   "pinData": {},
@@ -567,7 +612,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "b33d4c74-0720-4f80-b1cb-56605c87df79",
+  "versionId": "d2e291bf-d612-4a55-afc7-bf7c489d0907",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b637fd1006e44f723be16875a61ac23ca341ba9d1d20a1b8ec53c38777cc0848"
