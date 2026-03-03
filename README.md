@@ -7,7 +7,7 @@ The system doesn't just transcribe; it acts as a "Digital Supervisor"—analyzin
 
 ---
 
-![Workflow Overview](workflow_overview.PNG)
+![Workflow Overview](workflow_overview2.PNG)
 
 ## 🎯 Business Problem
 In high-volume environments like Support Centers or Legal Clinics, audio data is often a "dark liability":
