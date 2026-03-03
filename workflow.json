@@ -108,7 +108,7 @@
         "responses": {
           "values": [
             {
-              "content": "Scan for 'Red Flag' keywords (Lawyer, BBB, Unfair, Sue). Return JSON: {\"risk\": boolean, \"terms\": []}."
+              "content": "You are a legal compliance auditor. Analyze the transcript for mentions of 'lawyer', 'sue', 'legal action', or 'court'. Return ONLY a JSON object: {\"risk\": boolean, \"terms\": list}. Do not provide support advice"
             },
             {
               "content": "={{ $json.text }}."
@@ -256,42 +256,6 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "loose",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "45722e90-ccb1-4745-bfb8-f88a0d603398",
-              "leftValue": "={{ $json.priority_score }}",
-              "rightValue": 8,
-              "operator": {
-                "type": "number",
-                "operation": "gte"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "looseTypeValidation": true,
-        "options": {
-          "ignoreCase": false
-        }
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        16,
-        224
-      ],
-      "id": "2edf1dfe-1df4-4b9e-87c6-c08c673e6eb7",
-      "name": "Urgency Router"
-    },
-    {
-      "parameters": {
         "select": "channel",
         "channelId": {
           "__rl": true,
@@ -299,13 +263,13 @@
           "mode": "list",
           "cachedResultName": "n8n-bot"
         },
-        "text": "This is a High Piority Message",
+        "text": "=🚨 HIGH URGENCY ALERT 🚨 \n\nCategory: {{ $json.category }} \n\nPriority Score: {{ $json.priority_score }}/10 \n\nLegal Risk:{{ $json.risk_found.includes('\"risk\": true') ? \"🔴 YES\" : \"🟢 No Risk\" }} ",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        368,
+        304,
         208
       ],
       "id": "52f71591-303d-4541-a13b-1828d0987004",
@@ -340,7 +304,7 @@
           "value": {
             "Category": "={{ $json.category }}",
             "Urgency Score": "={{ $json.priority_score }}",
-            "Legal Risk": "={{ $json.risk_found.risk ? \"🔴 YES\" : \"🟢 Clear\" }}",
+            "Legal Risk": "={{ $json.risk_found.replace(/```json|```/g, \"\").trim().includes('\"risk\": true') ? \"🔴 YES\" : \"🟢 No Risk\" }}",
             "Timestamp": "={{ $now }}",
             "Transcript": "={{ $('GPT: Triage Classifier').item.json.output[0].content[0].text }}"
           },
@@ -400,7 +364,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        352,
+        272,
         -96
       ],
       "id": "ce68b10c-ed75-4612-ae1b-f99aa422eb54",
@@ -411,49 +375,54 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "45722e90-ccb1-4745-bfb8-f88a0d603398",
+              "leftValue": "={{ $json.priority_score }}",
+              "rightValue": 8,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "ec932e58-bbb9-412d-b97d-f26bda343b7c",
+              "leftValue": "={{ $json.risk_found }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        64,
+        224
+      ],
+      "id": "2edf1dfe-1df4-4b9e-87c6-c08c673e6eb7",
+      "name": "Filter: High Urgency"
     }
   ],
-  "pinData": {
-    "On S3 File Upload": [
-      {
-        "json": {
-          "headers": {
-            "host": "adeolatech.app.n8n.cloud",
-            "user-agent": "Amazon Simple Notification Service Agent",
-            "content-length": "1856",
-            "accept-encoding": "gzip, br",
-            "cdn-loop": "cloudflare; loops=1; subreqs=1",
-            "cf-connecting-ip": "52.46.211.41",
-            "cf-ew-via": "15",
-            "cf-ipcountry": "SE",
-            "cf-ray": "9d4f6d2978cc2d83-ARN",
-            "cf-visitor": "{\"scheme\":\"https\"}",
-            "cf-worker": "n8n.cloud",
-            "content-type": "text/plain; charset=UTF-8",
-            "x-amz-sns-message-id": "a3bbbd72-3ff7-59a1-902f-df6ef297c3ed",
-            "x-amz-sns-message-type": "Notification",
-            "x-amz-sns-subscription-arn": "arn:aws:sns:eu-north-1:226977156026:S3-to-n8n-Webhook:00504ec1-36cd-44b8-b3ac-122d8a9d409a",
-            "x-amz-sns-topic-arn": "arn:aws:sns:eu-north-1:226977156026:S3-to-n8n-Webhook",
-            "x-forwarded-for": "52.46.211.41, 162.158.182.116",
-            "x-forwarded-host": "adeolatech.app.n8n.cloud",
-            "x-forwarded-port": "443",
-            "x-forwarded-proto": "https",
-            "x-forwarded-server": "traefik-prod-users-gwc-57-677fd4b9c9-rkpj6",
-            "x-is-trusted": "yes",
-            "x-real-ip": "52.46.211.41"
-          },
-          "params": {},
-          "query": {},
-          "body": "{\n  \"Type\" : \"Notification\",\n  \"MessageId\" : \"a3bbbd72-3ff7-59a1-902f-df6ef297c3ed\",\n  \"TopicArn\" : \"arn:aws:sns:eu-north-1:226977156026:S3-to-n8n-Webhook\",\n  \"Subject\" : \"Amazon S3 Notification\",\n  \"Message\" : \"{\\\"Records\\\":[{\\\"eventVersion\\\":\\\"2.1\\\",\\\"eventSource\\\":\\\"aws:s3\\\",\\\"awsRegion\\\":\\\"eu-north-1\\\",\\\"eventTime\\\":\\\"2026-02-28T11:01:51.446Z\\\",\\\"eventName\\\":\\\"ObjectCreated:Put\\\",\\\"userIdentity\\\":{\\\"principalId\\\":\\\"A26PB7Z44G30GZ\\\"},\\\"requestParameters\\\":{\\\"sourceIPAddress\\\":\\\"102.89.23.10\\\"},\\\"responseElements\\\":{\\\"x-amz-request-id\\\":\\\"0Y2DWRJF9GWE7MTR\\\",\\\"x-amz-id-2\\\":\\\"0Pn9RsoPHrjvaWtHW84y+kBCIzX8tatPjO0QB0E7glf/T3LAjxWUAehTW0mCFqobSNnaoOXRW8Ni1CApWzqCA0dTnZsLz4+oTyWZdT6y+yg=\\\"},\\\"s3\\\":{\\\"s3SchemaVersion\\\":\\\"1.0\\\",\\\"configurationId\\\":\\\"VoiceOps-New-Audio-Ingestion\\\",\\\"bucket\\\":{\\\"name\\\":\\\"voiceops-intelligence-adeola\\\",\\\"ownerIdentity\\\":{\\\"principalId\\\":\\\"A26PB7Z44G30GZ\\\"},\\\"arn\\\":\\\"arn:aws:s3:::voiceops-intelligence-adeola\\\"},\\\"object\\\":{\\\"key\\\":\\\"audio_support_request.mp3.m4a\\\",\\\"size\\\":996392,\\\"eTag\\\":\\\"0b00c6d646d1f47861cd09f830fe76c1\\\",\\\"sequencer\\\":\\\"0069A2CB1F679B188E\\\"}}}]}\",\n  \"Timestamp\" : \"2026-02-28T11:01:52.123Z\",\n  \"SignatureVersion\" : \"1\",\n  \"Signature\" : \"G9VfVDGIAfBCPobA1u4KQhyEtbrkpnGJeqUP25q8kNo5KHbkcYVmagQYuxRZmL5W9tCIYYm1ZS0SKCJWyxRyYB3DMxuMoSqItHk4Qwa32nVXj/cV/hGKvYX5z9E6XxsGGjP05gXPLPbkh+DxxhvxPU2egCEqIDvC4kEslYO0dU/js4Noq+6h/TpjQcXVOeqweYoA6sZY7471+eG133gG6P+LrgbJwFoAMnu1xZr9L5yKJo56LXjJtV3EaYWU+RYePScSOX8zJ3NtNvKEEFaRtoSgk4xGMKLPG9ZV461o8eccW/I3qYCMNA2vtPisPR5+GyFt943a6Q7pS+5AnUqFHA==\",\n  \"SigningCertURL\" : \"https://sns.eu-north-1.amazonaws.com/SimpleNotificationService-7506a1e35b36ef5a444dd1a8e7cc3ed8.pem\",\n  \"UnsubscribeURL\" : \"https://sns.eu-north-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-north-1:226977156026:S3-to-n8n-Webhook:00504ec1-36cd-44b8-b3ac-122d8a9d409a\"\n}",
-          "webhookUrl": "https://adeolatech.app.n8n.cloud/webhook-test/aws-injection",
-          "executionMode": "test"
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "On S3 File Upload": {
       "main": [
@@ -571,11 +540,16 @@
             "node": "Append row in sheet",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Filter: High Urgency",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
     },
-    "Urgency Router": {
+    "Filter: High Urgency": {
       "main": [
         [
           {
@@ -593,7 +567,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "3835dd8a-44ad-42c3-9d2b-280059ba8a9e",
+  "versionId": "b33d4c74-0720-4f80-b1cb-56605c87df79",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "b637fd1006e44f723be16875a61ac23ca341ba9d1d20a1b8ec53c38777cc0848"
